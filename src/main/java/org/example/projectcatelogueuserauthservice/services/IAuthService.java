@@ -14,5 +14,8 @@ public interface IAuthService {
     public Pair<User, String> login(String email, String password)
             throws UserNotFoundException, InvalidCredentialException;
 
+    public User assignAdminUserRole(Long userId)
+            throws UserNotFoundException, InvalidCredentialException;
+
     boolean validateToken(String token);
 }

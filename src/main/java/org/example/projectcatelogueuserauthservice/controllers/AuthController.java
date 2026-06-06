@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,14 @@ public class AuthController {
         UserDto dto = from(pair.a);
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.set(HttpHeaders.SET_COOKIE, pair.b);
+        return new ResponseEntity<>(dto, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/assignAdminUserRole/{userId}")
+    public ResponseEntity<UserDto> assignAdminUserRole(@PathVariable Long userId) {
+        User user = service.assignAdminUserRole(userId);
+        UserDto dto = from(user);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         return new ResponseEntity<>(dto, headers, HttpStatus.OK);
     }
 

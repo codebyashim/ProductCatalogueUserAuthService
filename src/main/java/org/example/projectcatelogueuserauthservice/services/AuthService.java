@@ -109,6 +109,24 @@ public class AuthService implements IAuthService {
     }
 
     @Override
+    public User assignAdminUserRole(Long userId) throws UserNotFoundException, InvalidCredentialException {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found, Please signup first"));
+        List<Role> userRoles = user.getRoles();
+        Role adminRole = roleRepo.findByValue("ADMIN")
+                .orElseThrow(() ->
+                        new RuntimeException("ADMIN role not found"));
+        boolean isAdmin = userRoles.stream()
+                .anyMatch(role -> "ADMIN".equalsIgnoreCase(role.getValue()));
+
+        if (isAdmin) {
+            throw new InvalidCredentialException("User is already assigned ADMIN role");
+        }
+        userRoles.add(adminRole);
+        return userRepo.save(user);
+    }
+
+    @Override
     public boolean validateToken(String token) {
         Session session = sessionRepo.findByToken(token).orElse(null);
         if (session != null){
